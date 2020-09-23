@@ -12,7 +12,6 @@ public class Area {
 	
 	public String monitorar(float abcissa, float ordenada, boolean video, boolean termometro, boolean co2, boolean ch4) {
 		try {
-		
 			List<UnidadeMovel> unidadesCompativeis = new ArrayList<UnidadeMovel>();
 			
 			if(this.unidades == null || this.unidades.isEmpty())
