@@ -1,3 +1,4 @@
+package Monitoramento;
 import Math.Vector2;
 
 public class Main {
@@ -13,9 +14,9 @@ public class Main {
 		System.out.println(um1.calcularDistancia(2, 2));
 		System.out.println(um2.calcularDistancia(2, 2));
 		System.out.println(um3.calcularDistancia(2, 2));
-		//area.AdicionarUnidade(um1);
-		//area.AdicionarUnidade(um2);
-		//area.AdicionarUnidade(um3);
+		area.AdicionarUnidade(um1);
+		area.AdicionarUnidade(um2);
+		area.AdicionarUnidade(um3);
 		System.out.println(area.monitorar(2, 2, true, true, true, false));
 	}
 
