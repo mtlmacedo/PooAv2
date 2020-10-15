@@ -1,5 +1,6 @@
-package Monitoramento;
-import Math.Vector2;
+package logica;
+
+import math.Vector2;
 
 public abstract class UnidadeMovel {
 	
