@@ -1,16 +1,23 @@
 package logica;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class Area {
+import persistencia.*;
+import exception.UnidadeMovelExcepiton;
+
+public class Area implements AreaLogica {
 	private List<UnidadeMovel> unidades = new ArrayList<UnidadeMovel>();
-	
+	private UnidadeDAO unidadeDAO;
 	
 	public void AdicionarUnidade(UnidadeMovel unidade) {
 		unidades.add(unidade);
 	}
 	
-	public String monitorar(float abcissa, float ordenada, boolean video, boolean termometro, boolean co2, boolean ch4) {
+	public void setPersistencia(UnidadeDAO persistencia) throws Exception {
+		this.unidadeDAO = persistencia;
+	}
+	public String monitorar(float latitude, float longitude, boolean video, boolean termometro, boolean co2, boolean ch4) {
 		try {
 			List<UnidadeMovel> unidadesCompativeis = new ArrayList<UnidadeMovel>();
 			
@@ -18,21 +25,24 @@ public class Area {
 				throw new Exception("Não a unidades na area!");
 			
 			for(UnidadeMovel unidade : this.unidades) {
-				if(unidade.hasMedidorMetano() == ch4 && unidade.hasCameraDeVideo() == video && unidade.hasTermometro() == termometro && unidade.hasMedidorCO2() == co2) {
+				if(unidade.getMedidorMetano() == ch4 && unidade.getCameraDeVideo() == video && unidade.getTermometro() == termometro && unidade.getMedidorCO2() == co2) {
 					unidadesCompativeis.add(unidade);
 				}
 			}
 			
 			if(unidadesCompativeis == null || unidadesCompativeis.isEmpty())
-				throw new Exception("Não a unidades compativeis na area!");
+				throw new UnidadeMovelExcepiton("Não a unidades compativeis na area!");
 			
-			UnidadeMovel unidadeProxima = unidadesCompativeis.get(0);
+			UnidadeMovel unidadeProxima = (UnidadeMovel)unidadesCompativeis.get(0);
 			
 			for(UnidadeMovel unidade : unidadesCompativeis) {
-				unidadeProxima = unidade.calcularDistancia(abcissa, ordenada) < unidadeProxima.calcularDistancia(abcissa, ordenada) ? unidade : unidadeProxima;
+				unidadeProxima = unidade.calcularDistancia(latitude, longitude) < unidadeProxima.calcularDistancia(latitude, longitude) ? unidade : unidadeProxima;
 			}
 						
-			unidadeProxima.setPosicao(abcissa, ordenada);
+			unidadeProxima.setLatitude(latitude);
+			unidadeProxima.setLongitude(longitude);
+			
+			unidadeDAO.salvar(unidadeProxima);
 			
 			return "A unidade" + ' ' + unidadeProxima.getId() + ' ' + "Foi designada!";
 		
