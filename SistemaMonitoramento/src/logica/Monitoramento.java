@@ -6,7 +6,7 @@ import java.util.List;
 import persistencia.*;
 import exception.UnidadeMovelExcepiton;
 
-public class Area implements AreaLogica {
+public class Monitoramento implements MonitoramentoLogica {
 	private List<UnidadeMovel> unidades = new ArrayList<UnidadeMovel>();
 	private UnidadeDAO unidadeDAO;
 	

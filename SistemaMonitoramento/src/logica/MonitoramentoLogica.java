@@ -2,6 +2,6 @@ package logica;
 
 import persistencia.UnidadeDAO;
 
-public interface AreaLogica {
+public interface MonitoramentoLogica {
 	public void setPersistencia(UnidadeDAO persistencia) throws Exception;
 }
