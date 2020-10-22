@@ -12,11 +12,14 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
 import logica.MonitoramentoLogica;
+import logica.UnidadeEuclidiana;
+import logica.UnidadeManhattan;
 import logica.UnidadeMovel;
 import logica.dto.UnidadeDTO;
 
 import java.awt.GridBagLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -53,6 +56,8 @@ public class FrameMonitoramento extends JFrame implements MonitoramentoUI, Actio
 	private JButton btnAdicionar;
 	private MonitoramentoLogica monitoramentoLogica;
 	private TableModel tableModel;
+	private FrameTipoUnidade frameTipoUnidade;
+	
 	@Override
 	public void setLogica(MonitoramentoLogica logica) throws Exception {
 		this.monitoramentoLogica = logica;	
@@ -75,21 +80,46 @@ public class FrameMonitoramento extends JFrame implements MonitoramentoUI, Actio
 	}	
 	
 	private void onAtualizar() {
-		
-		
+	
 	}
 
-	private void onAdicionar() {
-
+	private void onAdicionar(){
+		try {
+			
+			float latitude = Float.parseFloat(this.textField.getText());
+			float longitude = Float.parseFloat(this.textField_2.getText());
+			boolean camera = this.chckbxCamera.isSelected();
+			boolean termometro = this.chckbxTermometro.isSelected(); 
+			boolean medidorCo2 = this.chckbxMedidorCo2.isSelected();
+			boolean medidorMetano = this.chckbxMedidorMetano.isSelected();
+			
+			this.frameTipoUnidade.setVisible(true);
+			if(this.frameTipoUnidade.getTipoUnidade() == 0) {
+				UnidadeManhattan unidade = new UnidadeManhattan(latitude, longitude, camera, termometro, medidorCo2, medidorMetano);
+				this.monitoramentoLogica.salvarUnidade(unidade);
+			}else if(this.frameTipoUnidade.getTipoUnidade() == 1) {
+				UnidadeEuclidiana unidade = new UnidadeEuclidiana(latitude, longitude, camera, termometro, medidorCo2, medidorMetano);
+				this.monitoramentoLogica.salvarUnidade(unidade);
+			}	
+		
+		}catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Esse Campo só aceita números" ,"ATENÇÂO", JOptionPane.INFORMATION_MESSAGE); 
+			e.printStackTrace();
+		}
 	}
 
-	private void onMonitorar() throws Exception {
-		
-		float lat = (float) Double.parseDouble(this.textField.getText());
-		float lon = (float) Double.parseDouble(this.textField_2.getText());
-		
-		monitoramentoLogica.monitorar(lat, lon, this.chckbxCamera.isSelected(), this.chckbxTermometro.isSelected(), 
-									  this.chckbxMedidorCo2.isSelected(), this.chckbxMedidorMetano.isSelected());
+	private void onMonitorar() {
+		try {
+			String retorno;
+			float lat = Float.parseFloat(this.textField.getText());
+			float lon = Float.parseFloat(this.textField_2.getText());
+			retorno = this.monitoramentoLogica.monitorar(lat, lon, this.chckbxCamera.isSelected(), this.chckbxTermometro.isSelected(), 
+										  this.chckbxMedidorCo2.isSelected(), this.chckbxMedidorMetano.isSelected());
+			JOptionPane.showMessageDialog(null, retorno ,"ATENÇÂO", JOptionPane.INFORMATION_MESSAGE); 
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Esse Campo só aceita números" ,"ATENÇÂO", JOptionPane.INFORMATION_MESSAGE); 
+			e.printStackTrace();
+		}
 	}
 	
 	private void render() {
@@ -108,16 +138,20 @@ public class FrameMonitoramento extends JFrame implements MonitoramentoUI, Actio
 	private void setTableData(){
 		try {
 		
-			List<UnidadeMovel> unidadesBase = monitoramentoLogica.getUnidades();
+			List<UnidadeDTO> unidadesBase = monitoramentoLogica.getUnidades();
 			TableModelMonitoramento tableModel = new TableModelMonitoramento(unidadesBase);			
 			this.table = new JTable(tableModel);
-
+			this.scrollPane = new JScrollPane();
+			scrollPane.setBounds(240, 200, 300, 200);
+			scrollPane.setViewportView(this.table);
+				 
 		} catch (Exception e) {
 			e.printStackTrace();			
 		}		
 	}
 
 	private void initComponents() {
+		this.frameTipoUnidade = new FrameTipoUnidade();
 
 	    this.btnAtualizar = new JButton("Atualizar");
 		this.btnAtualizar.addActionListener(this);
@@ -142,10 +176,6 @@ public class FrameMonitoramento extends JFrame implements MonitoramentoUI, Actio
 		this.separator = new JSeparator();
 		
 		setTableData();
-		this.scrollPane = new JScrollPane();
-		scrollPane.setBounds(240, 200, 300, 200);
-		scrollPane.setViewportView(this.table);
-			
 	}
 	
 	private void initLayout() {

@@ -2,6 +2,7 @@ package persistencia;
 
 import java.util.List;
 import logica.UnidadeMovel;
+import logica.dto.UnidadeDTO;
 
 
 public interface UnidadeDAO {

@@ -12,6 +12,7 @@ import java.util.List;
 import logica.UnidadeEuclidiana;
 import logica.UnidadeManhattan;
 import logica.UnidadeMovel;
+import logica.dto.UnidadeDTO;
 import exception.UnidadeMovelExcepiton;
 
 public class UnidadeSQL implements UnidadeDAO{
@@ -39,7 +40,7 @@ public class UnidadeSQL implements UnidadeDAO{
 		
 		public UnidadeSQL() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
 			DriverManager.registerDriver((Driver) Class.forName(UnidadeSQL.DRIVE).newInstance());
-		}
+		} 
 		
 		private Connection getConnection() throws SQLException {
 			Connection conn = DriverManager.getConnection(UnidadeSQL.URI, UnidadeSQL.USER, UnidadeSQL.PWD);
@@ -141,6 +142,36 @@ public class UnidadeSQL implements UnidadeDAO{
 			return unidades;
 		}
 		
+		public List<UnidadeDTO> buscarTodasUi() throws Exception {
+			List<UnidadeDTO> unidades = new ArrayList<UnidadeDTO>();
+			UnidadeDTO unidade = null;
+			PreparedStatement ps = this.getConnection().prepareStatement(UnidadeSQL.RECOVERY_ALL);;
+			ResultSet rSet = ps.executeQuery();
+			while(rSet.next()){
+				unidade = null;
+				int tipo = rSet.getInt("TIPOUNIDADE");
+				if(tipo == UnidadeSQL.UNIDADE_EUCLIDIANA)
+					unidade = new UnidadeDTO(rSet.getInt("ID"),
+						  			rSet.getFloat("LATITUDE"),
+						  			rSet.getFloat("LONGITUDE"),
+						  			rSet.getBoolean("MEDIDORCO2"),
+						  			rSet.getBoolean("CAMERA"),
+						  			rSet.getBoolean("TERMOMETRO"),
+						  			rSet.getBoolean("MEDIDORMETANO"),
+									rSet.getInt("TIPOUNIDADE"));
+				else if(tipo == UnidadeSQL.UNIDADE_MANHATTAN)
+					unidade = new UnidadeDTO(rSet.getInt("ID"),
+				  			rSet.getFloat("LATITUDE"),
+				  			rSet.getFloat("LONGITUDE"),
+				  			rSet.getBoolean("MEDIDORCO2"),
+				  			rSet.getBoolean("CAMERA"),
+				  			rSet.getBoolean("TERMOMETRO"),
+				  			rSet.getBoolean("MEDIDORMETANO"),
+							rSet.getInt("TIPOUNIDADE"));
+				unidades.add(unidade);
+			}
+			return unidades;
+		}
 
 
 		@Override

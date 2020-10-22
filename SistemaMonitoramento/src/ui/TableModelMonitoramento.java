@@ -6,19 +6,20 @@ import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
 import logica.UnidadeMovel;
+import logica.dto.UnidadeDTO;
 
 public class TableModelMonitoramento extends AbstractTableModel {   
 
 	private static final long serialVersionUID = 1L;
-	private List<UnidadeMovel> unidades;
-	private String[] colunas = {"ID", "Latitude", "Longitude", "Camera", "Termometro", "Medidor de CO2", "Medidor de Metano"};
+	private List<UnidadeDTO> unidades;
+	private String[] colunas = {"ID", "Latitude", "Longitude", "Camera", "Termometro", "Medidor de CO2", "Medidor de Metano", "Tipo Unidade"};
 	
 
 	public TableModelMonitoramento() {
-		unidades = new ArrayList<UnidadeMovel>();
+		unidades = new ArrayList<UnidadeDTO>();
 	}
 
-	public TableModelMonitoramento(List<UnidadeMovel> lista) {
+	public TableModelMonitoramento(List<UnidadeDTO> lista) {
 		this();
 		unidades.addAll(lista);
 	}
@@ -30,7 +31,7 @@ public class TableModelMonitoramento extends AbstractTableModel {
 
 	@Override
 	public int getColumnCount() {		
-		return 7;
+		return 8;
 	}
 	
 	@Override
@@ -47,7 +48,7 @@ public class TableModelMonitoramento extends AbstractTableModel {
 	@Override
 	public Object getValueAt(int linha, int coluna) {
 		
-		UnidadeMovel unidade = unidades.get(linha);
+		UnidadeDTO unidade = unidades.get(linha);
 		
 		switch (coluna) {
 		case 0:
@@ -57,13 +58,15 @@ public class TableModelMonitoramento extends AbstractTableModel {
 		case 2:
 			return unidade.getLongitude();
 		case 3:
-			return unidade.getCameraDeVideo(); 
+			return unidade.isCameraDeVideo(); 
         case 4:
-			return unidade.getTermometro();
+			return unidade.isTermometro();
         case 5:
-    		return unidade.getMedidorCO2();
+    		return unidade.isMedidorCO2();
         case 6:
-    		return unidade.getMedidorMetano();
+    		return unidade.isMedidorMetano();
+        case 7:
+    		return unidade.getTipoUnidadeTratado();
         default:
 			return null;
 		}
@@ -77,7 +80,7 @@ public class TableModelMonitoramento extends AbstractTableModel {
 	@Override
 	public void setValueAt(Object valor, int linha, int coluna) {
 		
-		UnidadeMovel unidade = unidades.get(linha);
+		UnidadeDTO unidade = unidades.get(linha);
 		switch (coluna) {
 		case 0:
 			unidade.setId(Integer.parseInt(valor.toString()));
@@ -100,12 +103,15 @@ public class TableModelMonitoramento extends AbstractTableModel {
 		case 6:
             unidade.setMedidorMetano(Boolean.parseBoolean(valor.toString()));
 			break;
-		}
-		fireTableDataChanged();
-	}
+		case 7:
+            unidade.setTipoUnidade(Integer.parseInt(valor.toString()));
+			break;
 
+		}
+		fireTableDataChanged(); 
+	}
 	
-	public void adiciona(UnidadeMovel unidade) {
+	public void adiciona(UnidadeDTO unidade) {
 		this.unidades.add(unidade);
 		
 		fireTableRowsInserted(this.unidades.size() - 1, this.unidades.size() - 1);
@@ -122,7 +128,7 @@ public class TableModelMonitoramento extends AbstractTableModel {
 		return this.unidades.indexOf(cb);
 	}
 
-	public void adicionaLista(List<UnidadeMovel> lista) {
+	public void adicionaLista(List<UnidadeDTO> lista) {
 		int i = this.unidades.size();
 		this.unidades.addAll(lista);
 		fireTableRowsInserted(i, i + lista.size());
@@ -135,7 +141,7 @@ public class TableModelMonitoramento extends AbstractTableModel {
 		fireTableRowsDeleted(0, i - 1);
 	}
 	
-	public void atualizaLista(List<UnidadeMovel> lista) {
+	public void atualizaLista(List<UnidadeDTO> lista) {
 		this.limpaLista();
 		adicionaLista(lista);
 	}
