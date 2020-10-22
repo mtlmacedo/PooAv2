@@ -19,7 +19,7 @@ public class UnidadeSQL implements UnidadeDAO{
 		private static final int UNIDADE_MANHATTAN = 0;
 		private static final int UNIDADE_EUCLIDIANA = 1;	
 		
-		public static final String URI = "jdbc:hsqldb:file:C:\\Users\\mathe\\Desktop\\DB\\DB";
+		public static final String URI = "jdbc:hsqldb:file:C:\\Users\\mathe\\Desktop\\DB\\DB;readonly=true;hsqldb.lock_file=false";
 		public static final String USER = "SA";
 		public static final String PWD = "";
 		public static final String DRIVE = "org.hsqldb.jdbc.JDBCDriver";
@@ -31,6 +31,8 @@ public class UnidadeSQL implements UnidadeDAO{
 	            					     	   " FROM UNIDADEMOVEL \r\n" +
 	            					     	   " WHERE ID = ? \r\n";	
 
+		private static String RECOVERY_ALL = "SELECT ID, LATITUDE, LONGITUDE, MEDIDORCO2, CAMERA, TERMOMETRO, MEDIDORMETANO, TIPOUNIDADE \r\n" + 
+		     	   " FROM UNIDADEMOVEL \r\n";	
 		
 		private static String UPDATE = "UPDATE UNIDADEMOVEL \r\n" +
 				" SET LATITUDE = ?, LONGITUDE= ?, MEDIDORCO2 = ?, CAMERA = ?, TERMOMETRO = ?, MEDIDORMETANO = ?, TIPOUNIDADE = ?" +
@@ -90,7 +92,7 @@ public class UnidadeSQL implements UnidadeDAO{
 			ResultSet rSet = ps.executeQuery();
 			if(!rSet.next())
 				throw new UnidadeMovelExcepiton();
-			int tipo = rSet.getInt("TIPO_COR");
+			int tipo = rSet.getInt("TIPOUNIDADE");
 			if(tipo == UnidadeSQL.UNIDADE_EUCLIDIANA)
 				unidade = new UnidadeEuclidiana(rSet.getInt("ID"),
 					  			rSet.getFloat("LATITUDE"),
@@ -109,6 +111,36 @@ public class UnidadeSQL implements UnidadeDAO{
 			  			rSet.getBoolean("MEDIDORMETANO"));
 			return unidade;
 				
+		}
+		
+		@Override
+		public List<UnidadeMovel> buscarTodas() throws Exception {
+			List<UnidadeMovel> unidades = new ArrayList<UnidadeMovel>();
+			UnidadeMovel unidade = null;
+			PreparedStatement ps = this.getConnection().prepareStatement(UnidadeSQL.RECOVERY_ALL);;
+			ResultSet rSet = ps.executeQuery();
+			while(rSet.next()) {
+				unidade = null;
+				int tipo = rSet.getInt("TIPOUNIDADE");
+				if(tipo == UnidadeSQL.UNIDADE_EUCLIDIANA)
+					unidade = new UnidadeEuclidiana(rSet.getInt("ID"),
+						  			rSet.getFloat("LATITUDE"),
+						  			rSet.getFloat("LONGITUDE"),
+						  			rSet.getBoolean("MEDIDORCO2"),
+						  			rSet.getBoolean("CAMERA"),
+						  			rSet.getBoolean("TERMOMETRO"),
+						  			rSet.getBoolean("MEDIDORMETANO"));
+				else if(tipo == UnidadeSQL.UNIDADE_MANHATTAN)
+					unidade = new UnidadeManhattan(rSet.getInt("ID"),
+				  			rSet.getFloat("LATITUDE"),
+				  			rSet.getFloat("LONGITUDE"),
+				  			rSet.getBoolean("MEDIDORCO2"),
+				  			rSet.getBoolean("CAMERA"),
+				  			rSet.getBoolean("TERMOMETRO"),
+				  			rSet.getBoolean("MEDIDORMETANO"));
+				unidades.add(unidade);
+			}
+			return unidades;
 		}
 		
 
