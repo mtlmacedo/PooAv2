@@ -19,7 +19,7 @@ public class UnidadeSQL implements UnidadeDAO{
 		private static final int UNIDADE_MANHATTAN = 0;
 		private static final int UNIDADE_EUCLIDIANA = 1;	
 		
-		public static final String URI = "jdbc:hsqldb:file:C:\\Users\\mathe\\Desktop\\DB\\DB;readonly=true;hsqldb.lock_file=false";
+		public static final String URI = "jdbc:hsqldb:file:C:\\Users\\mathe\\Desktop\\DB\\DB;hsqldb.lock_file=false";
 		public static final String USER = "SA";
 		public static final String PWD = "";
 		public static final String DRIVE = "org.hsqldb.jdbc.JDBCDriver";
@@ -34,9 +34,7 @@ public class UnidadeSQL implements UnidadeDAO{
 		private static String RECOVERY_ALL = "SELECT ID, LATITUDE, LONGITUDE, MEDIDORCO2, CAMERA, TERMOMETRO, MEDIDORMETANO, TIPOUNIDADE \r\n" + 
 		     	   " FROM UNIDADEMOVEL \r\n";	
 		
-		private static String UPDATE = "UPDATE UNIDADEMOVEL \r\n" +
-				" SET LATITUDE = ?, LONGITUDE= ?, MEDIDORCO2 = ?, CAMERA = ?, TERMOMETRO = ?, MEDIDORMETANO = ?, TIPOUNIDADE = ?" +
-	            " WHERE ID = ? \r\n";
+		private static String UPDATE = "UPDATE UNIDADEMOVEL SET LATITUDE = ?, LONGITUDE = ?, MEDIDORCO2 = ?, CAMERA = ?, TERMOMETRO = ?, MEDIDORMETANO = ?, TIPOUNIDADE = ? WHERE ID = ?";
 
 		
 		public UnidadeSQL() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
@@ -60,27 +58,27 @@ public class UnidadeSQL implements UnidadeDAO{
 		
 		private void saveEuclidiana(UnidadeEuclidiana unidade) throws SQLException {
 			PreparedStatement ps = this.getConnection().prepareStatement(UnidadeSQL.SAVE);
-			ps.setInt(1, unidade.getId());
-			ps.setFloat(2, unidade.getLatitude());
-			ps.setFloat(3, unidade.getLongitude());
-			ps.setBoolean(4, unidade.getMedidorCO2());
-			ps.setBoolean(5, unidade.getCameraDeVideo());
-			ps.setBoolean(6, unidade.getTermometro());
-			ps.setBoolean(7, unidade.getMedidorMetano());
-			ps.setInt(8, UnidadeSQL.UNIDADE_EUCLIDIANA);
+			//ps.setInt(1, unidade.getId());
+			ps.setFloat(1, unidade.getLatitude());
+			ps.setFloat(2, unidade.getLongitude());
+			ps.setBoolean(3, unidade.getMedidorCO2());
+			ps.setBoolean(4, unidade.getCameraDeVideo());
+			ps.setBoolean(5, unidade.getTermometro());
+			ps.setBoolean(6, unidade.getMedidorMetano());
+			ps.setInt(7, UnidadeSQL.UNIDADE_EUCLIDIANA);
 			ps.executeUpdate();
 		}
 		
 		private void saveManhattan(UnidadeManhattan unidade) throws SQLException {
 			PreparedStatement ps = this.getConnection().prepareStatement(UnidadeSQL.SAVE);
-			ps.setInt(1, unidade.getId());
-			ps.setFloat(2, unidade.getLatitude());
-			ps.setFloat(3, unidade.getLongitude());
-			ps.setBoolean(4, unidade.getMedidorCO2());
-			ps.setBoolean(5, unidade.getCameraDeVideo());
-			ps.setBoolean(6, unidade.getTermometro());
-			ps.setBoolean(7, unidade.getMedidorMetano());
-			ps.setInt(8, UnidadeSQL.UNIDADE_MANHATTAN);
+			//ps.setInt(1, unidade.getId());
+			ps.setFloat(1, unidade.getLatitude());
+			ps.setFloat(2, unidade.getLongitude());
+			ps.setBoolean(3, unidade.getMedidorCO2());
+			ps.setBoolean(4, unidade.getCameraDeVideo());
+			ps.setBoolean(5, unidade.getTermometro());
+			ps.setBoolean(6, unidade.getMedidorMetano());
+			ps.setInt(7, UnidadeSQL.UNIDADE_MANHATTAN);
 			ps.executeUpdate();
 		}
 
@@ -156,25 +154,27 @@ public class UnidadeSQL implements UnidadeDAO{
 
 		private void updateManhattan(UnidadeManhattan unidade) throws SQLException {
 			PreparedStatement ps = this.getConnection().prepareStatement(UnidadeSQL.UPDATE);
-			ps.setInt(1, unidade.getId());
-			ps.setFloat(2, unidade.getLatitude());
-			ps.setFloat(3, unidade.getLongitude());
-			ps.setBoolean(4, unidade.getMedidorCO2());
-			ps.setBoolean(5, unidade.getCameraDeVideo());
-			ps.setBoolean(6, unidade.getTermometro());
-			ps.setBoolean(7, unidade.getMedidorMetano());
+			ps.setFloat(1, unidade.getLatitude());
+			ps.setFloat(2, unidade.getLongitude());
+			ps.setBoolean(3, unidade.getMedidorCO2());
+			ps.setBoolean(4, unidade.getCameraDeVideo());
+			ps.setBoolean(5, unidade.getTermometro());
+			ps.setBoolean(6, unidade.getMedidorMetano());
+			ps.setInt(7, UnidadeSQL.UNIDADE_MANHATTAN);
+			ps.setInt(8, unidade.getId());
 			ps.executeUpdate();
 		}
 		
 		private void updateEuclidiana(UnidadeEuclidiana unidade) throws SQLException {
 			PreparedStatement ps = this.getConnection().prepareStatement(UnidadeSQL.UPDATE);
-			ps.setInt(1, unidade.getId());
-			ps.setFloat(2, unidade.getLatitude());
-			ps.setFloat(3, unidade.getLongitude());
-			ps.setBoolean(4, unidade.getMedidorCO2());
-			ps.setBoolean(5, unidade.getCameraDeVideo());
-			ps.setBoolean(6, unidade.getTermometro());
-			ps.setBoolean(7, unidade.getMedidorMetano());
+			ps.setFloat(1, unidade.getLatitude());
+			ps.setFloat(2, unidade.getLongitude());
+			ps.setBoolean(3, unidade.getMedidorCO2());
+			ps.setBoolean(4, unidade.getCameraDeVideo());
+			ps.setBoolean(5, unidade.getTermometro());
+			ps.setBoolean(6, unidade.getMedidorMetano());
+			ps.setInt(7, UnidadeSQL.UNIDADE_EUCLIDIANA);
+			ps.setInt(8, unidade.getId());
 			ps.executeUpdate();
 		}	
 		

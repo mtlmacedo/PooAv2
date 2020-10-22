@@ -2,6 +2,12 @@ package logica;
 
 public abstract class UnidadeMovel {
 	
+	@Override
+	public String toString() {
+		return "UnidadeMovel [latitude=" + latitude + ", longitude=" + longitude + ", id=" + id + ", medidorCO2="
+				+ medidorCO2 + ", cameraDeVideo=" + cameraDeVideo + ", termometro=" + termometro + ", medidorMetano="
+				+ medidorMetano + "]";
+	}
 	private float latitude;
 	private float longitude;
 	private int id; 

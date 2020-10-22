@@ -1,13 +1,17 @@
 package logica;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import persistencia.*;
 import exception.UnidadeMovelExcepiton;
+import logica.dto.UnidadeDTO;
 
 public class Monitoramento implements MonitoramentoLogica {
 	private List<UnidadeMovel> unidades;
+	private List<UnidadeDTO> unidadeDTO;
 	private UnidadeDAO unidadeDAO;
+	private UnidadeSQL unidadeSQL;
 	
 	public void AdicionarUnidade(UnidadeMovel unidade) throws Exception {
 		unidadeDAO.salvar(unidade);
@@ -19,10 +23,12 @@ public class Monitoramento implements MonitoramentoLogica {
 	}
 	
 	@Override
-	public void Monitorar(float latitude, float longitude, boolean video, boolean termometro, boolean co2, boolean ch4)
+	public void monitorar(float latitude, float longitude, boolean video, boolean termometro, boolean co2, boolean ch4)
 			throws Exception {
 		try {
-			List<UnidadeMovel> unidadesCompativeis = this.getUnidades();
+			this.unidadeSQL = new UnidadeSQL();
+			this.unidades = this.unidadeSQL.buscarTodas();
+			List<UnidadeMovel> unidadesCompativeis = new ArrayList<UnidadeMovel>();
 			
 			if(this.unidades == null || this.unidades.isEmpty())
 				throw new Exception("Não a unidades na area!");
@@ -45,7 +51,7 @@ public class Monitoramento implements MonitoramentoLogica {
 			unidadeProxima.setLatitude(latitude);
 			unidadeProxima.setLongitude(longitude);
 			
-			unidadeDAO.atualizar(unidadeProxima);
+			this.unidadeSQL.atualizar(unidadeProxima);
 		
 		}catch(Exception e){
 			System.out.println(e.getMessage());
@@ -54,8 +60,9 @@ public class Monitoramento implements MonitoramentoLogica {
 	}
 
 	@Override
-	public List<UnidadeMovel> getUnidades() throws Exception {
-		
-		return null;
+	public List<UnidadeMovel> getUnidades() throws Exception {	
+		this.unidadeSQL = new UnidadeSQL();
+		this.unidades = this.unidadeSQL.buscarTodas();
+		return this.unidades;
 	}
 }

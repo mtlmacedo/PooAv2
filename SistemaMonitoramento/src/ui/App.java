@@ -9,7 +9,7 @@ import persistencia.UnidadeDAO;
 import persistencia.UnidadeSQL;
 
 public class App {
-	private MonitoramentoWindow ui;
+	private FrameMonitoramento ui;
 	private Monitoramento logica;
 	private UnidadeDAO persistencia;
 	
@@ -21,7 +21,7 @@ public class App {
 				
 		this.persistencia = (UnidadeSQL) (Class.forName((String)prop.get("PERSISTENCIA")).newInstance());
 		this.logica = (Monitoramento) (Class.forName((String)prop.get("LOGICA")).newInstance());
-		this.ui = (MonitoramentoWindow) (Class.forName((String)prop.get("UI")).newInstance());		
+		this.ui = (FrameMonitoramento) (Class.forName((String)prop.get("UI")).newInstance());		
 	}
 
 	
