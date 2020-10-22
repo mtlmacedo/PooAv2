@@ -32,6 +32,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JButton;
 import javax.swing.JSeparator;
 import javax.swing.JTable;
+import java.awt.Color;
 
 public class FrameMonitoramento extends JFrame implements MonitoramentoUI, ActionListener {
 	public FrameMonitoramento() {
@@ -75,7 +76,7 @@ public class FrameMonitoramento extends JFrame implements MonitoramentoUI, Actio
 			}
 			this.repaint();
 		}catch (Exception e) {
-			
+			e.printStackTrace();
 		}
 	}	
 	
@@ -83,6 +84,7 @@ public class FrameMonitoramento extends JFrame implements MonitoramentoUI, Actio
 		int row = this.table.getSelectedRow();
 		int id = (int) this.tableModel.getValueAt(row, 0);
 		this.monitoramentoLogica.delete(id);
+		JOptionPane.showMessageDialog(null, "A unidade" + " " + id + " " + "Foi Excluida!" ,"ATENÇÂO", JOptionPane.INFORMATION_MESSAGE); 
 	}
 
 	private void onAdicionar(){
@@ -137,8 +139,9 @@ public class FrameMonitoramento extends JFrame implements MonitoramentoUI, Actio
 		this.render();		
 	}
 	
-	private void setTableData(List<UnidadeDTO> unidadesBase){
+	private void setTable(){
 		try {		
+			List<UnidadeDTO> unidadesBase = monitoramentoLogica.getUnidades();
 			this.tableModel = new TableModelMonitoramento(unidadesBase);			
 			this.table = new JTable(tableModel);
 			this.scrollPane = new JScrollPane();
@@ -174,7 +177,7 @@ public class FrameMonitoramento extends JFrame implements MonitoramentoUI, Actio
 
 		this.separator = new JSeparator();
 		
-		setTableData(monitoramentoLogica.getUnidades());
+		setTable();
 	}
 	
 	private void initLayout() {
