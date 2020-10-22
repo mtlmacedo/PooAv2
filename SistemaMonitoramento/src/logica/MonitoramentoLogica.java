@@ -10,4 +10,5 @@ public interface MonitoramentoLogica {
 	public String monitorar(float latitude, float longitude, boolean video, boolean termometro, boolean co2, boolean ch4) throws Exception;
 	public List<UnidadeDTO> getUnidades() throws Exception;
 	public void salvarUnidade(UnidadeMovel unidade) throws Exception;
+	public void delete(int idUnidade) throws Exception;
 }

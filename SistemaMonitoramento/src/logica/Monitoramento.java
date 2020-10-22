@@ -1,5 +1,6 @@
 package logica;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +20,10 @@ public class Monitoramento implements MonitoramentoLogica {
 	
 	public void setPersistencia(UnidadeDAO persistencia) throws Exception {
 		this.unidadeDAO = persistencia;
+	}
+	
+	public void delete(int idUnidade) throws Exception{
+		unidadeDAO.delete(idUnidade);
 	}
 	
 	@Override

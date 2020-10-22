@@ -37,6 +37,7 @@ public class UnidadeSQL implements UnidadeDAO{
 		
 		private static String UPDATE = "UPDATE UNIDADEMOVEL SET LATITUDE = ?, LONGITUDE = ?, MEDIDORCO2 = ?, CAMERA = ?, TERMOMETRO = ?, MEDIDORMETANO = ?, TIPOUNIDADE = ? WHERE ID = ?";
 
+		private static String DELETE = "DELETE FROM UNIDADEMOVEL WHERE ID = ?";
 		
 		public UnidadeSQL() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
 			DriverManager.registerDriver((Driver) Class.forName(UnidadeSQL.DRIVE).newInstance());
@@ -208,6 +209,12 @@ public class UnidadeSQL implements UnidadeDAO{
 			ps.setInt(8, unidade.getId());
 			ps.executeUpdate();
 		}	
+		
+		public void delete(int idUnidade) throws SQLException {
+			PreparedStatement ps = this.getConnection().prepareStatement(UnidadeSQL.DELETE);
+			ps.setInt(1, idUnidade);
+			ps.executeUpdate();
+		}
 		
 		
 		public void salveOuAtualize(UnidadeMovel unidade) throws Exception {

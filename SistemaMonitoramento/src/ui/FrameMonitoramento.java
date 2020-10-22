@@ -44,7 +44,7 @@ public class FrameMonitoramento extends JFrame implements MonitoramentoUI, Actio
 	private JTextField textField;
 	private JTextField textField_2;
 	private JTable table;
-	private JButton btnAtualizar;
+	private JButton btnExcluir;
 	private JLabel lblNewLabel;
 	private JLabel lblLongitude;
 	private JCheckBox chckbxCamera;
@@ -70,8 +70,8 @@ public class FrameMonitoramento extends JFrame implements MonitoramentoUI, Actio
 				this.onMonitorar();
 			}else if(arg0.getSource().equals(this.btnAdicionar)) {
 				this.onAdicionar();
-			}else if(arg0.getSource().equals(this.btnAtualizar)) {
-				this.onAtualizar();
+			}else if(arg0.getSource().equals(this.btnExcluir)) {
+				this.onExcuir();
 			}
 			this.repaint();
 		}catch (Exception e) {
@@ -79,8 +79,10 @@ public class FrameMonitoramento extends JFrame implements MonitoramentoUI, Actio
 		}
 	}	
 	
-	private void onAtualizar() {
-	
+	private void onExcuir() throws Exception {	
+		int row = this.table.getSelectedRow();
+		int id = (int) this.tableModel.getValueAt(row, 0);
+		this.monitoramentoLogica.delete(id);
 	}
 
 	private void onAdicionar(){
@@ -135,26 +137,23 @@ public class FrameMonitoramento extends JFrame implements MonitoramentoUI, Actio
 		this.render();		
 	}
 	
-	private void setTableData(){
-		try {
-		
-			List<UnidadeDTO> unidadesBase = monitoramentoLogica.getUnidades();
-			TableModelMonitoramento tableModel = new TableModelMonitoramento(unidadesBase);			
+	private void setTableData(List<UnidadeDTO> unidadesBase){
+		try {		
+			this.tableModel = new TableModelMonitoramento(unidadesBase);			
 			this.table = new JTable(tableModel);
 			this.scrollPane = new JScrollPane();
-			scrollPane.setBounds(240, 200, 300, 200);
-			scrollPane.setViewportView(this.table);
-				 
+			this.scrollPane.setBounds(240, 200, 300, 200);
+			this.scrollPane.setViewportView(this.table);
 		} catch (Exception e) {
 			e.printStackTrace();			
 		}		
 	}
 
-	private void initComponents() {
+	private void initComponents() throws Exception {
 		this.frameTipoUnidade = new FrameTipoUnidade();
 
-	    this.btnAtualizar = new JButton("Atualizar");
-		this.btnAtualizar.addActionListener(this);
+	    this.btnExcluir = new JButton("Excluir");
+		this.btnExcluir.addActionListener(this);
 		this.btnMonitorar = new JButton("Monitorar");
 		this.btnMonitorar.addActionListener(this);
 		this.btnAdicionar = new JButton("Adicionar");
@@ -175,7 +174,7 @@ public class FrameMonitoramento extends JFrame implements MonitoramentoUI, Actio
 
 		this.separator = new JSeparator();
 		
-		setTableData();
+		setTableData(monitoramentoLogica.getUnidades());
 	}
 	
 	private void initLayout() {
@@ -190,7 +189,7 @@ public class FrameMonitoramento extends JFrame implements MonitoramentoUI, Actio
 		JPanel panelNorth = new JPanel();
 		contentPane.add(panelNorth, BorderLayout.NORTH);
 		
-		panelNorth.add(btnAtualizar);
+		panelNorth.add(btnExcluir);
 		
 		JPanel panelSouth = new JPanel();
 		contentPane.add(panelSouth, BorderLayout.SOUTH);
